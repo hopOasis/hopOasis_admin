@@ -2,7 +2,6 @@
 	"name": "hopoasis-admin",
 	"private": true,
 	"version": "0.0.0",
-	"homepage": "https://hopOasis.github.io/hopOasis_admin/",
 	"type": "module",
 	"scripts": {
 		"dev": "vite",
