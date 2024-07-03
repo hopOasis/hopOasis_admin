@@ -1,6 +1,5 @@
 import {
 	Datagrid,
-	DeleteButton,
 	EditButton,
 	ImageField,
 	List,
