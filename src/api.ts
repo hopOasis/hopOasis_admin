@@ -2,7 +2,7 @@ import simpleRestDataProvider from "ra-data-simple-rest";
 import { type CreateParams, type DataProvider, fetchUtils } from "react-admin";
 import { getImagesUrl } from "./utils";
 
-const API_URL = "http://prod.eba-33ij8qpt.eu-central-1.elasticbeanstalk.com";
+const API_URL = "https://prod.eba-33ij8qpt.eu-central-1.elasticbeanstalk.com";
 const baseDataProvider = simpleRestDataProvider(API_URL);
 
 type BeverageParams = {
