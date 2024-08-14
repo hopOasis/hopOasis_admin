@@ -1,5 +1,5 @@
 import simpleRestDataProvider from "ra-data-simple-rest";
-import { type CreateParams, type DataProvider, fetchUtils } from "react-admin";
+import { type DataProvider, fetchUtils } from "react-admin";
 import { getImagesUrl } from "./utils";
 
 const API_URL = import.meta.env.VITE_API_URL;
