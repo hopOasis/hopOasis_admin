@@ -6,17 +6,10 @@ import {
 	type SelectChangeEvent,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import {
-	useDataProvider,
-	useGetList,
-	useRefresh,
-	useUpdate,
-} from "react-admin";
+import { useGetList, useRefresh, useUpdate } from "react-admin";
 import type { Offer } from "../types/offer";
-// import { useMutation, useQuery } from '@tanstack/react-query';
 
 export const CurrentOffer: React.FC = () => {
-	// const dataProvider = useDataProvider();
 	const [activeId, setActiveId] = useState<string>("None");
 	const [offersId, setOffersId] = useState<Offer[] | null>(null);
 	const { data } = useGetList<Offer>(
