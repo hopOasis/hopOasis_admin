@@ -1,7 +1,7 @@
 import {
 	Create,
-	ImageField,
-	ImageInput,
+	// ImageField,
+	// ImageInput,
 	TabbedForm,
 	TextInput,
 	required,
@@ -11,7 +11,7 @@ export const BeerCreate = () => (
 	<Create>
 		<TabbedForm>
 			<TabbedForm.Tab label={"information"}>
-				<TextInput source="name" label="Name" validate={[required()]} />
+				<TextInput source="beerName" label="Name" validate={[required()]} />
 				<TextInput source="beerColor" validate={[required()]} />
 			</TabbedForm.Tab>
 			<TabbedForm.Tab label={"price and volume"}>
@@ -29,15 +29,15 @@ export const BeerCreate = () => (
 					validate={[required()]}
 				/>
 			</TabbedForm.Tab>
-			<TabbedForm.Tab label={"images"}>
-				<ImageInput
-					source="image"
-					accept={[".png", ".jpg"]}
-					validate={[required()]}
-				>
-					<ImageField source="src" title="title" />
-				</ImageInput>
-			</TabbedForm.Tab>
+			{/* <TabbedForm.Tab label={"images"}>
+        <ImageInput
+          source="image"
+          accept={[".png", ".jpg"]}
+          validate={[required()]}
+        >
+          <ImageField source="src" title="title" />
+        </ImageInput>
+      </TabbedForm.Tab> */}
 		</TabbedForm>
 	</Create>
 );
