@@ -1,8 +1,10 @@
+import { log } from "console";
 import simpleRestDataProvider from "ra-data-simple-rest";
 import { type CreateParams, type DataProvider, fetchUtils } from "react-admin";
+import { json } from "stream/consumers";
 import { getImagesUrl } from "./utils";
 
-const API_URL = "https://prod.eba-33ij8qpt.eu-central-1.elasticbeanstalk.com";
+const API_URL = import.meta.env.VITE_API_URL;
 const baseDataProvider = simpleRestDataProvider(API_URL);
 
 type BeverageParams = {
@@ -44,26 +46,34 @@ const createProductFormData = (params: CreateParams<BeverageParams>) => {
 
 export const customProvider: DataProvider = {
 	...baseDataProvider,
-	getList: async (resource, params) => {
-		const { page, perPage } = params.pagination;
-		const { field, order } = params.sort;
-		const response = await fetchUtils.fetchJson(
-			`${API_URL}/${resource}?_page=${page}$_limit=${perPage}&_sorts=${field}&_order=${order}`,
-		);
+	getList: async (resource) => {
+		// const { page, perPage } = params.pagination;
+		// const { field, order } = params.sort;
+		const response = await fetchUtils.fetchJson(`${API_URL}/${resource}`);
 		return {
-			data: [
-				...response.json.content.map((item: ItemType) => ({
-					...item,
-					imageName: getImagesUrl(item.imageName, API_URL, resource).join(" "),
-				})),
-			],
-			total: response.json.totalElements,
+			data:
+				resource === "special-offers"
+					? response.json
+					: [
+							...response.json.content.map((item: ItemType) => ({
+								...item,
+								imageName: getImagesUrl(item.imageName, API_URL, resource).join(
+									" ",
+								),
+							})),
+						],
+			total: response.json.totalElements || response.json.length,
 		};
 	},
 
 	getOne: async (resource, params) => {
 		const { id } = params;
 		const response = await fetchUtils.fetchJson(`${API_URL}/${resource}/${id}`);
+		if (resource === "special-offers") {
+			return {
+				data: response.json,
+			};
+		}
 		const preparedData = {
 			...response.json,
 			imageName: getImagesUrl(response.json.imageName, API_URL, resource).join(
@@ -86,6 +96,7 @@ export const customProvider: DataProvider = {
 			beerName,
 			description,
 		} = params.data;
+
 		const response = await fetchUtils.fetchJson(
 			`${API_URL}/${resource}/${params.id}`,
 			{
@@ -107,13 +118,26 @@ export const customProvider: DataProvider = {
 		};
 	},
 	create: async (resource, params) => {
-		const formData = createProductFormData(params);
-		console.log(formData);
-		return fetchUtils
-			.fetchJson(`${API_URL}/${resource}`, {
-				method: "POST",
-				body: formData,
-			})
-			.then(({ json }) => ({ data: json }));
+		if (resource !== "special-offers") {
+			console.log("hello");
+
+			const formData = createProductFormData(params);
+
+			return fetchUtils
+				.fetchJson(`${API_URL}/${resource}`, {
+					method: "POST",
+					body: formData,
+				})
+				.then(({ json }) => ({ data: json }));
+		}
+
+		const response = await fetchUtils.fetchJson(`${API_URL}/${resource}`, {
+			method: "POST",
+			body: JSON.stringify(params.data),
+		});
+
+		return {
+			data: response.json,
+		};
 	},
 };
