@@ -7,12 +7,12 @@ import {
 	required,
 } from "react-admin";
 
-export const BeerCreate = () => (
+export const CiderCreate = () => (
 	<Create>
 		<TabbedForm>
 			<TabbedForm.Tab label={"information"}>
 				<TextInput source="name" label="Name" validate={[required()]} />
-				<TextInput source="beerColor" validate={[required()]} />
+				{/* <TextInput source="beerColor" validate={[required()]} /> */}
 			</TabbedForm.Tab>
 			
 			<TabbedForm.Tab label={"price and volume"}>
