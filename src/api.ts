@@ -2,7 +2,7 @@ import simpleRestDataProvider from "ra-data-simple-rest";
 import { type CreateParams, type DataProvider, fetchUtils } from "react-admin";
 import { getImagesUrl } from "./utils";
 
-const API_URL = "https://giou6fh6yg2ogdsh7uzcaobhte0wtwha.lambda-url.eu-central-1.on.aws";
+const API_URL = "https://gfkg3ijokauacf7dkjkvjqqeai0xefka.lambda-url.eu-central-1.on.aws";
 const baseDataProvider = simpleRestDataProvider(API_URL);
 
 type SnackParams = {
