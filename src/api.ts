@@ -36,77 +36,112 @@ const createProductFormData = (params: CreateParams<SnackParams>) => {
 
 export const customProvider: DataProvider = {
     ...baseDataProvider,
-    
+
     getList: async (resource, params) => {
         const { page, perPage } = params.pagination;
         const { field, order } = params.sort;
-        const response = await fetchUtils.fetchJson(
-            `${API_URL}/${resource}?_page=${page}&_limit=${perPage}&_sort=${field}&_order=${order}`
-        );
+        try {
+            const response = await fetchUtils.fetchJson(
+                `${API_URL}/${resource}?_page=${page}&_limit=${perPage}&_sort=${field}&_order=${order}`
+            );
 
-        return {
-            data: response.json.content.map((item: ItemType) => ({
-                ...item,
-                snackImageName: Array.isArray(item.snackImageName) 
-                    ? getImagesUrl(item.snackImageName, API_URL, resource).join(" ") 
-                    : "", 
-            })),
-            total: response.json.totalElements,
-        };
+            if (!response.json || !response.json.content) {
+                throw new Error("Invalid response structure");
+            }
+
+            return {
+                data: response.json.content.map((item: ItemType) => ({
+                    ...item,
+                    snackImageName: Array.isArray(item.snackImageName)
+                        ? getImagesUrl(item.snackImageName, API_URL, resource).join(" ")
+                        : "",
+                })),
+                total: response.json.totalElements,
+            };
+        } catch (error) {
+            console.error(`Error fetching list for resource ${resource}:`, error);
+            throw error;
+        }
     },
 
     getOne: async (resource, params) => {
         const { id } = params;
-        const response = await fetchUtils.fetchJson(`${API_URL}/${resource}/${id}`);
-        return {
-            data: {
-                ...response.json,
-                snackImageName: Array.isArray(response.json.snackImageName) 
-                    ? getImagesUrl(response.json.snackImageName, API_URL, resource).join(" ") 
-                    : "",
-            },
-        };
+        try {
+            const response = await fetchUtils.fetchJson(`${API_URL}/${resource}/${id}`);
+
+            if (!response.json) {
+                throw new Error("Invalid response structure");
+            }
+
+            return {
+                data: {
+                    ...response.json,
+                    snackImageName: Array.isArray(response.json.snackImageName)
+                        ? getImagesUrl(response.json.snackImageName, API_URL, resource).join(" ")
+                        : "",
+                },
+            };
+        } catch (error) {
+            console.error(`Error fetching one item for resource ${resource}:`, error);
+            throw error;
+        }
     },
 
     update: async (resource, params) => {
         const { snackName, description, priceLarge, priceSmall, weightLarge, weightSmall, averageRating, ratingCount } = params.data;
-        const response = await fetch(`${API_URL}/${resource}/${params.id}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                snackName,
-                description,
-                priceLarge,
-                priceSmall,
-                weightLarge,
-                weightSmall,
-                averageRating,
-                ratingCount,
-            }),
-        });
+        try {
+            const response = await fetch(`${API_URL}/${resource}/${params.id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    snackName,
+                    description,
+                    priceLarge,
+                    priceSmall,
+                    weightLarge,
+                    weightSmall,
+                    averageRating,
+                    ratingCount,
+                }),
+            });
 
-        if (!response.ok) {
-            throw new Error("Failed to update");
+            if (!response.ok) {
+                const errorText = await response.text(); // Получаем текст ошибки
+                console.error(`Failed to update ${resource}. Response:`, errorText);
+                throw new Error("Failed to update");
+            }
+
+            return {
+                data: await response.json(),
+            };
+        } catch (error) {
+            console.error(`Error updating ${resource} with id ${params.id}:`, error);
+            throw error;
         }
-
-        return {
-            data: await response.json(),
-        };
     },
 
     create: async (resource, params) => {
         const formData = createProductFormData(params);
-        return fetch(`${API_URL}/${resource}`, {
-            method: "POST",
-            body: formData,
-        })
-        .then((response) => response.json())
-        .then((json) => ({ data: json }))
-        .catch((error) => {
-            console.error("Create request failed", error);
+        try {
+            const response = await fetch(`${API_URL}/${resource}`, {
+                method: "POST",
+                body: formData,
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text(); // Логируем ошибку сервера
+                console.error(`Failed to create ${resource}. Response:`, errorText);
+                throw new Error("Failed to create");
+            }
+
+            return {
+                data: await response.json(),
+            };
+        } catch (error) {
+            console.error(`Error creating new ${resource}:`, error);
             throw error;
-        });
+        }
     },
 };
