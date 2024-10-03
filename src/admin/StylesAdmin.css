@@ -1,0 +1,139 @@
+body {
+  font-family: 'SUSE', sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+.list-common .RaDatagrid-root{
+  background-color: #77797a !important;
+  padding: 10px;
+  box-sizing: border-box;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 100%;
+  margin: 0px auto;
+}
+.list-common .MuiTableRow-root,
+.list-common .MuiTableCell-root{
+ color:#ffffff !important;
+}
+/* show */
+.list-common .MuiTab-root{
+  background-color:#77797a !important;
+  color: #00ffff !important; 
+  border-radius:15px;
+}
+.list-common .Mui-selected {
+  background-color: #333333 !important; 
+}
+/* Стили для содержимого вкладок */
+.list-common .RaTabbedShowLayout-content{
+  padding-left: 5% !important; 
+  border-radius: 15px;
+  background-color: #77797a !important; 
+  color: #ffffff;
+}
+
+/* show */
+
+
+
+.list-common .RaDatagrid-headerCell {
+  font-weight: 500;
+  color: #ffffff !important; 
+  background-color: #333333 !important;
+  padding: 15px;
+  text-align: center; 
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+}
+
+.list-common .RaTextField-root,
+.list-common .RaNumberField-root {
+  color: #ffffff !important; /* Принудительный белый цвет текста */
+}
+
+.list-common .RaDatagrid-row {
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  border-radius: 15px;
+}
+
+.list-common .RaDatagrid-row:nth-child(even) {
+  background-color: #616466;
+}
+
+.list-common .RaDatagrid-row:hover {
+  background-color: #333333;
+  transform: scale(1.02);
+  text-shadow: 0 0 5px #00ffff;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.list-common .RaDatagrid-cell {
+  padding: 12px;
+  background-color: #333333;
+  text-align: center;
+  vertical-align: middle;
+  letter-spacing: 2px;
+  color: #ffffff !important; /* Принудительный белый цвет текста */
+}
+
+.list-common .RaDatagrid-image {
+  width: 30px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.list-common .RaTextField-root {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Текст для описания списка */
+.table-container-p {
+  color: #00ffff;
+  align-items: center;
+  font-size: 20px;
+  font-weight: 700;
+  padding-left: 40%;
+  letter-spacing: 3px;
+}
+
+/* Адаптивные стили */
+@media (max-width: 768px) {
+  .list-common .RaDatagrid-root {
+    padding: 10px;
+  }
+
+  .table-container-p {
+    padding-left: 0;
+    text-align: center;
+  }
+}
+
+/* ==================== Стили для админ-панели ==================== */
+
+.MuiAppBar-root {
+  background-color: #333333 !important;
+
+}
+
+/* Переопределение стиля заголовков списков */
+.MuiTypography-h6 {
+  color: #00ffff !important;
+  font-weight: 700 !important;
+  font-size: 2rem !important;
+  padding: 2px 5px;
+  letter-spacing: 2px;
+}
+
+/* Переопределение стиля кнопок в Toolbar (верхние кнопки) */
+.MuiButton-root {
+  margin: 10px;
+  padding: 8px !important;
+  background-color: #333333 !important;
+  color: #ffffff !important;
+}
