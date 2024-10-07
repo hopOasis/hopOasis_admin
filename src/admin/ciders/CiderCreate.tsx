@@ -8,37 +8,39 @@ import {
 } from "react-admin";
 
 export const CiderCreate = () => (
-	<Create>
-		<TabbedForm>
-			<TabbedForm.Tab label={"information"}>
-				<TextInput source="name" label="Name" validate={[required()]} />
-				{/* <TextInput source="beerColor" validate={[required()]} /> */}
+	<Create className="list-common">
+		<TabbedForm className="list-common">
+			<TabbedForm.Tab label="Information" className="list-common">
+				<TextInput source="ciderName" label="Name" validate={[required()]} className="list-common" />
 			</TabbedForm.Tab>
-			
-			<TabbedForm.Tab label={"price and volume"}>
-				<TextInput source="priceSmall" validate={[required()]} />
-				<TextInput source="priceLarge" validate={[required()]} />
-				<TextInput source="volumeLarge" validate={[required()]} />
-				<TextInput source="volumeSmall" validate={[required()]} />
+
+			<TabbedForm.Tab label="Price and Volume" className="list-common">
+				<TextInput source="priceSmall" validate={[required()]} className="list-common" />
+				<TextInput source="priceLarge" validate={[required()]} className="list-common" />
+				<TextInput source="volumeLarge" validate={[required()]} className="list-common" />
+				<TextInput source="volumeSmall" validate={[required()]} className="list-common" />
 			</TabbedForm.Tab>
-			
-			<TabbedForm.Tab label={"description"}>
+
+			<TabbedForm.Tab label="Description" className="list-common">
 				<TextInput
 					source="description"
 					variant="outlined"
 					multiline
 					fullWidth
 					validate={[required()]}
+					className="list-common"
 				/>
 			</TabbedForm.Tab>
-			
-			<TabbedForm.Tab label={"images"}>
+
+			<TabbedForm.Tab label="Images" className="list-common">
 				<ImageInput
 					source="image"
-					accept=""
+					accept="image/*"
 					validate={[required()]}
+					multiple
+					className="list-common"
 				>
-					<ImageField source="src" title="title" />
+					<ImageField source="src" title="name" className="list-common" />
 				</ImageInput>
 			</TabbedForm.Tab>
 		</TabbedForm>

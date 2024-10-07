@@ -1,14 +1,21 @@
+export type CustomImage = {
+  id: number;
+  name: string; 
+};
 
 export type BeerParams = {
   id: number;
   beerName: string;
-  priceLarge: number;
-  priceSmall: number;
   volumeLarge: number;
   volumeSmall: number;
+  priceLarge: number;
+  priceSmall: number;
   description: string;
   beerColor: string;
-  imageName: string;
+  image: CustomImage[]; 
+  averageRating: number;
+  ratingCount: number;
+  specialOfferIds: number[]; 
 };
 
 export type SnackParams = {
@@ -19,29 +26,34 @@ export type SnackParams = {
   priceSmall: number;
   weightLarge: number;
   weightSmall: number;
+  image: CustomImage[]; // Изображения для снэков
   snackImageName: string[];
   averageRating: number;
   ratingCount: number;
+  specialOfferIds: number[]; 
 };
 
 export type CiderParams = {
   id: number;
   ciderName: string;
-  priceLarge: number;
-  priceSmall: number;
   volumeLarge: number;
   volumeSmall: number;
+  priceLarge: number;
+  priceSmall: number;
   description: string;
   ciderColor: string;
-  imageName: string;
+  image: CustomImage[]; 
+  averageRating: number;
+  ratingCount: number;
+  specialOfferIds: number[]; 
 };
 
 export type OfferParams = {
   id: number;
   name: string;
   active: boolean;
-  specialOfferBeers: number[]; 
-  specialOfferCiders: number[]; 
-  specialOfferSnacks: number[]; 
+  specialOfferBeers: BeerParams[]; 
+  specialOfferCiders: CiderParams[]; 
+  specialOfferSnacks: SnackParams[]; 
   specialOfferProductBundles: number[]; 
 };

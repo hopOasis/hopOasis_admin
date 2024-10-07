@@ -5,26 +5,29 @@ import {
 	TabbedShowLayout,
 	TextField,
 } from "react-admin";
+import '../StylesAdmin.css';
 
 export const CiderShow = () => (
 	<Show className="list-common">
-		<TabbedShowLayout>
-			<TabbedShowLayout.Tab label={"information"} className="list-common">
-				<TextField source="id" />
-				<TextField source="ciderName" label="Name" />
-				{/* <TextField source="ciderColor" /> */}
+		<TabbedShowLayout className="list-common">
+			<TabbedShowLayout.Tab label="Information" className="list-common">
+				<TextField source="id" className="list-common" />
+				<TextField source="ciderName" label="Name" className="list-common" />
 			</TabbedShowLayout.Tab>
-			<TabbedShowLayout.Tab label={"price and volume"} className="list-common">
-				<NumberField source="priceLarge" />
-				<NumberField source="priceSmall" />
-				<NumberField source="volumeLarge" />
-				<NumberField source="volumeSmall" />
+
+			<TabbedShowLayout.Tab label="Price and Volume" className="list-common">
+				<NumberField source="priceLarge" className="list-common" />
+				<NumberField source="priceSmall" className="list-common" />
+				<NumberField source="volumeLarge" className="list-common" />
+				<NumberField source="volumeSmall" className="list-common" />
 			</TabbedShowLayout.Tab>
-			<TabbedShowLayout.Tab label={"description"} className="list-common">
-				<TextField source="description" />
+
+			<TabbedShowLayout.Tab label="Description" className="list-common">
+				<TextField source="description" className="list-common" />
 			</TabbedShowLayout.Tab>
-			<TabbedShowLayout.Tab label={"images"} className="list-common">
-				<ImageField source="ciderImageName" label="Image" />
+
+			<TabbedShowLayout.Tab label="Images" className="list-common">
+				<ImageField source="image" label="Image" className="list-common-image" />
 			</TabbedShowLayout.Tab>
 		</TabbedShowLayout>
 	</Show>

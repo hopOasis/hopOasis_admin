@@ -1,35 +1,69 @@
-import { Edit, NumberInput, TabbedForm, TextInput } from "react-admin";
+import {
+  Edit,
+  ImageField,
+  ImageInput,
+  TabbedForm,
+  TextInput,
+  required,
+  NumberInput,
+} from "react-admin";
 
-export const SnackEdit = () => {
-	return (
-		<Edit>
-			<TabbedForm>
-				<TabbedForm.Tab label={"Information"}>
-					<TextInput
-						source="snackName"
-						label="Name"
-						variant="outlined"
-						size="medium"
-					/>
-				</TabbedForm.Tab>
+export const SnackEdit = () => (
+  <Edit>
+    <TabbedForm>
+      <TabbedForm.Tab label={"Information"} className="list-common">
+        <TextInput
+          source="snackName"
+          label="Name"
+          validate={[required()]}
+          className="list-common"
+        />
+        <TextInput
+          source="description"
+          label="Description"
+          multiline
+          fullWidth
+          className="list-common"
+        />
+      </TabbedForm.Tab>
 
-				<TabbedForm.Tab label={"Price and Weight"}>
-					<NumberInput source="priceLarge" label="Price (Large)" variant="outlined" size="medium" />
-					<NumberInput source="priceSmall" label="Price (Small)" variant="outlined" size="medium" />
-					<NumberInput source="weightLarge" label="Weight (Large)" variant="outlined" size="medium" />
-					<NumberInput source="weightSmall" label="Weight (Small)" variant="outlined" size="medium" />
-				</TabbedForm.Tab>
+      <TabbedForm.Tab label={"Price and Weight"} className="list-common">
+        <NumberInput
+          source="priceLarge"
+          label="Price (Large)"
+          validate={[required()]}
+          className="list-common"
+        />
+        <NumberInput
+          source="priceSmall"
+          label="Price (Small)"
+          validate={[required()]}
+          className="list-common"
+        />
+        <NumberInput
+          source="weightLarge"
+          label="Weight (Large)"
+          validate={[required()]}
+          className="list-common"
+        />
+        <NumberInput
+          source="weightSmall"
+          label="Weight (Small)"
+          validate={[required()]}
+          className="list-common"
+        />
+      </TabbedForm.Tab>
 
-				<TabbedForm.Tab label={"Description"}>
-					<TextInput
-						variant="outlined"
-						source="description"
-						label="Description"
-						multiline
-						fullWidth
-					/>
-				</TabbedForm.Tab>
-			</TabbedForm>
-		</Edit>
-	);
-};
+      <TabbedForm.Tab label={"Images"} className="list-common">
+        <ImageInput
+          source="image"
+          accept="image/*"
+          validate={[required()]}
+          className="list-common-image"
+        >
+          <ImageField source="src" title="title" />
+        </ImageInput>
+      </TabbedForm.Tab>
+    </TabbedForm>
+  </Edit>
+);
