@@ -202,3 +202,5 @@ export const customProvider: DataProvider = {
         return baseDataProvider.deleteMany(resource, params);
     },
 };
+
+console.log("test")
