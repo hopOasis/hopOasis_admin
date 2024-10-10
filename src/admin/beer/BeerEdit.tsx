@@ -1,20 +1,24 @@
-import { Edit, NumberInput, TabbedForm, TextInput } from "react-admin";
+import {
+    Edit,
+    NumberInput,
+    TabbedForm,
+    TextInput,
+    EditProps,
+} from "react-admin";
 
-export const BeerEdit = () => (
-    <Edit className="list-common">
+export const BeerEdit = (props: EditProps) => (
+    <Edit {...props} className="list-common">  {/* Убрали <BeerParams> */}
         <TabbedForm className="list-common">
             <TabbedForm.Tab label="Information" className="list-common">
                 <TextInput source="beerName" label="Name" variant="outlined" size="medium" className="list-common" />
                 <TextInput source="beerColor" variant="outlined" size="medium" className="list-common" />
             </TabbedForm.Tab>
-
             <TabbedForm.Tab label="Price and Volume" className="list-common">
                 <NumberInput source="priceLarge" variant="outlined" size="medium" className="list-common" />
                 <NumberInput source="priceSmall" variant="outlined" size="medium" className="list-common" />
                 <NumberInput source="volumeLarge" variant="outlined" size="medium" className="list-common" />
                 <NumberInput source="volumeSmall" variant="outlined" size="medium" className="list-common" />
             </TabbedForm.Tab>
-
             <TabbedForm.Tab label="Description" className="list-common">
                 <TextInput
                     variant="outlined"

@@ -5,23 +5,23 @@ import {
 	TabbedForm,
 	TextInput,
 	required,
+	CreateProps,
 } from "react-admin";
+import { BeerParams } from "../../types"; 
 
-export const BeerCreate = () => (
-	<Create className="list-common">
+export const BeerCreate = (props: CreateProps) => (
+	<Create<BeerParams> {...props} className="list-common">
 			<TabbedForm className="list-common">
 					<TabbedForm.Tab label="Information" className="list-common">
 							<TextInput source="beerName" label="Name" validate={[required()]} className="list-common" />
 							<TextInput source="beerColor" validate={[required()]} className="list-common" />
 					</TabbedForm.Tab>
-
 					<TabbedForm.Tab label="Price and Volume" className="list-common">
 							<TextInput source="priceSmall" validate={[required()]} className="list-common" />
 							<TextInput source="priceLarge" validate={[required()]} className="list-common" />
 							<TextInput source="volumeLarge" validate={[required()]} className="list-common" />
 							<TextInput source="volumeSmall" validate={[required()]} className="list-common" />
 					</TabbedForm.Tab>
-
 					<TabbedForm.Tab label="Description" className="list-common">
 							<TextInput
 									source="description"
@@ -32,10 +32,9 @@ export const BeerCreate = () => (
 									className="list-common"
 							/>
 					</TabbedForm.Tab>
-
 					<TabbedForm.Tab label="Images" className="list-common">
 							<ImageInput
-									source="image"
+									source="imageName"
 									accept="image/*"
 									validate={[required()]}
 									multiple

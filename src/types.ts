@@ -1,59 +1,82 @@
-export type CustomImage = {
+
+export type CustomImage = string;
+
+
+export type ProductOption = {
   id: number;
-  name: string; 
+  quantity: number;
+  price: number;
+};
+
+
+export type VolumeOption = ProductOption & {
+  volume: number;
+};
+
+
+export type WeightOption = ProductOption & {
+  weight: number;
 };
 
 export type BeerParams = {
   id: number;
   beerName: string;
-  volumeLarge: number;
-  volumeSmall: number;
-  priceLarge: number;
-  priceSmall: number;
   description: string;
   beerColor: string;
-  image: CustomImage[]; 
+  imageName: CustomImage[]; 
   averageRating: number;
   ratingCount: number;
-  specialOfferIds: number[]; 
+  specialOfferIds: number[];
+  itemType: 'BEER';
+  options: VolumeOption[];
 };
+
+
+export type CiderParams = {
+  id: number;
+  ciderName: string;
+  description: string;
+  ciderImageName: CustomImage[]; 
+  averageRating: number;
+  ratingCount: number;
+  specialOfferIds: number[];
+  itemType: 'CIDER';
+  options: VolumeOption[]; 
+};
+
 
 export type SnackParams = {
   id: number;
   snackName: string;
   description: string;
-  priceLarge: number;
-  priceSmall: number;
-  weightLarge: number;
-  weightSmall: number;
-  image: CustomImage[]; // Изображения для снэков
-  snackImageName: string[];
+  snackImageName: CustomImage[];
   averageRating: number;
   ratingCount: number;
-  specialOfferIds: number[]; 
+  specialOfferIds: number[];
+  itemType: 'SNACK';
+  options: WeightOption[];
 };
 
-export type CiderParams = {
+// Product Bundle
+export type ProductBundleParams = {
   id: number;
-  ciderName: string;
-  volumeLarge: number;
-  volumeSmall: number;
-  priceLarge: number;
-  priceSmall: number;
+  name: string;
   description: string;
-  ciderColor: string;
-  image: CustomImage[]; 
+  productImageName: CustomImage[];
   averageRating: number;
   ratingCount: number;
-  specialOfferIds: number[]; 
+  specialOfferIds: number[];
+  itemType: 'PRODUCT_BUNDLE';
+  options: ProductOption[];
 };
+
 
 export type OfferParams = {
   id: number;
   name: string;
   active: boolean;
-  specialOfferBeers: BeerParams[]; 
-  specialOfferCiders: CiderParams[]; 
-  specialOfferSnacks: SnackParams[]; 
-  specialOfferProductBundles: number[]; 
+  specialOfferBeers: BeerParams[];
+  specialOfferCiders: CiderParams[];
+  specialOfferSnacks: SnackParams[];
+  specialOfferProductBundles: ProductBundleParams[];
 };

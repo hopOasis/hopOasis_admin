@@ -1,64 +1,11 @@
 import simpleRestDataProvider from "ra-data-simple-rest";
-import { CreateParams, DataProvider, fetchUtils, UpdateParams, RaRecord, Identifier } from "react-admin";
-import { OfferParams, SnackParams, BeerParams, CiderParams, CustomImage } from "./types";
-import { getImagesUrl } from "./utils";
+import { DataProvider, fetchUtils } from "react-admin";
+import type { RaRecord, Identifier, CreateParams, UpdateParams } from "react-admin";
+import type { SnackParams, BeerParams, CiderParams, ProductBundleParams } from "./types";
+import { getImagesUrl, fetchResource } from "./utils";
 
-const API_URL = "https://gfkg3ijokauacf7dkjkvjqqeai0xefka.lambda-url.eu-central-1.on.aws";
+const API_URL = "https://giou6fh6yg2ogdsh7uzcaobhte0wtwha.lambda-url.eu-central-1.on.aws";
 const baseDataProvider = simpleRestDataProvider(API_URL);
-
-const processPaginatedResponse = <T extends RaRecord<Identifier>>(response: { json: { content: T[]; totalElements: number } }) => {
-  return {
-    data: response.json.content,
-    total: response.json.totalElements,
-  };
-};
-
-const createOfferFormData = (params: CreateParams<OfferParams>) => {
-  const formData = new FormData();
-  if (params.data.name) formData.append("name", params.data.name);
-  if (params.data.active !== undefined) formData.append("active", String(params.data.active));
-  formData.append("specialOfferBeers", JSON.stringify(params.data.specialOfferBeers || []));
-  formData.append("specialOfferCiders", JSON.stringify(params.data.specialOfferCiders || []));
-  formData.append("specialOfferSnacks", JSON.stringify(params.data.specialOfferSnacks || []));
-  formData.append("specialOfferProductBundles", JSON.stringify(params.data.specialOfferProductBundles || []));
-  return formData;
-};
-
-const createSnackFormData = (params: CreateParams<SnackParams>) => {
-  const formData = new FormData();
-  if (params.data.snackName) formData.append("snackName", params.data.snackName);
-  if (params.data.description) formData.append("description", params.data.description);
-  if (params.data.priceLarge !== undefined) formData.append("priceLarge", String(params.data.priceLarge));
-  if (params.data.priceSmall !== undefined) formData.append("priceSmall", String(params.data.priceSmall));
-  if (params.data.weightLarge !== undefined) formData.append("weightLarge", String(params.data.weightLarge));
-  if (params.data.weightSmall !== undefined) formData.append("weightSmall", String(params.data.weightSmall));
-  if (params.data.averageRating !== undefined) formData.append("averageRating", String(params.data.averageRating));
-  if (params.data.ratingCount !== undefined) formData.append("ratingCount", String(params.data.ratingCount));
-
-  if (params.data.image && Array.isArray(params.data.image)) {
-    params.data.image.forEach((img: CustomImage) => {
-      formData.append("image[]", JSON.stringify({ id: img.id, name: img.name }));
-    });
-  }
-  return formData;
-};
-
-// Общая функция для обработки ресурса (используется для create и update)
-const fetchResource = async <T extends RaRecord<Identifier>>(resource: string, method: 'POST' | 'PUT', params?: UpdateParams<T> | CreateParams<T>) => {
-  const url = `${API_URL}/${resource}${params && 'id' in params ? `/${params.id}` : ''}`;
-  const response = await fetch(url, {
-    method,
-    body: params ? (resource === "special-offers" ? createOfferFormData(params as CreateParams<OfferParams>) : createSnackFormData(params as CreateParams<SnackParams>)) : undefined,
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    console.error(`Failed to ${method.toLowerCase()} ${resource}. Response:`, errorText);
-    throw new Error(`Failed to ${method.toLowerCase()}`);
-  }
-
-  return await response.json();
-};
 
 export const customProvider: DataProvider = {
   ...baseDataProvider,
@@ -72,26 +19,60 @@ export const customProvider: DataProvider = {
       const response = await fetchUtils.fetchJson(url);
 
       switch (resource) {
-        case "special-offers":
+        case "special-offers": {
           return {
             data: response.json,
             total: response.json.length,
           };
+        }
         case "snacks": {
-          // Обработка snacks с учетом изображений
           const snacksData = response.json.content.map((item: SnackParams) => ({
             ...item,
-            image: Array.isArray(item.image) ? getImagesUrl(item.image.map((img: CustomImage) => img.name), API_URL, resource) : [],
+            snackImageName: Array.isArray(item.snackImageName)
+              ? getImagesUrl(item.snackImageName, API_URL, resource)
+              : [],
           }));
           return {
             data: snacksData,
             total: response.json.totalElements,
           };
         }
-        case "beers":
-          return processPaginatedResponse<BeerParams>(response);
-        case "ciders":
-          return processPaginatedResponse<CiderParams>(response);
+        case "beers": {
+          const beersData = response.json.content.map((item: BeerParams) => ({
+            ...item,
+            imageName: Array.isArray(item.imageName)
+              ? getImagesUrl(item.imageName, API_URL, resource)
+              : [],
+          }));
+          return {
+            data: beersData,
+            total: response.json.totalElements,
+          };
+        }
+        case "ciders": {
+          const cidersData = response.json.content.map((item: CiderParams) => ({
+            ...item,
+            ciderImageName: Array.isArray(item.ciderImageName)
+              ? getImagesUrl(item.ciderImageName, API_URL, resource)
+              : [],
+          }));
+          return {
+            data: cidersData,
+            total: response.json.totalElements,
+          };
+        }
+        case "products-bundle": {
+          const productBundlesData = response.json.content.map((item: ProductBundleParams) => ({
+            ...item,
+            productImageName: Array.isArray(item.productImageName)
+              ? getImagesUrl(item.productImageName, API_URL, resource)
+              : [],
+          }));
+          return {
+            data: productBundlesData,
+            total: response.json.totalElements,
+          };
+        }
         default:
           return baseDataProvider.getList(resource, params);
       }
@@ -108,17 +89,41 @@ export const customProvider: DataProvider = {
         case "special-offers":
           return { data: response.json };
         case "snacks": {
-          // Исправление: используем response.json вместо item
           const snackData: SnackParams = {
             ...response.json,
-            image: Array.isArray(response.json.image) ? getImagesUrl(response.json.image.map((img: CustomImage) => img.name), API_URL, resource) : [],
+            snackImageName: Array.isArray(response.json.snackImageName)
+              ? getImagesUrl(response.json.snackImageName, API_URL, resource)
+              : [],
           };
           return { data: snackData };
         }
-        case "beers":
-          return { data: response.json as BeerParams };
-        case "ciders":
-          return { data: response.json as CiderParams };
+        case "beers": {
+          const beerData: BeerParams = {
+            ...response.json,
+            imageName: Array.isArray(response.json.imageName)
+              ? getImagesUrl(response.json.imageName, API_URL, resource)
+              : [],
+          };
+          return { data: beerData };
+        }
+        case "ciders": {
+          const ciderData: CiderParams = {
+            ...response.json,
+            ciderImageName: Array.isArray(response.json.ciderImageName)
+              ? getImagesUrl(response.json.ciderImageName, API_URL, resource)
+              : [],
+          };
+          return { data: ciderData };
+        }
+        case "products-bundle": {
+          const productBundleData: ProductBundleParams = {
+            ...response.json,
+            productImageName: Array.isArray(response.json.productImageName)
+              ? getImagesUrl(response.json.productImageName, API_URL, resource)
+              : [],
+          };
+          return { data: productBundleData };
+        }
         default:
           return baseDataProvider.getOne(resource, params);
       }
@@ -128,22 +133,30 @@ export const customProvider: DataProvider = {
     }
   },
 
-  update: async (resource, params) => {
+  update: async <T extends RaRecord<Identifier>>(resource: string, params: UpdateParams<T>) => {
     try {
-      return {
-        data: await fetchResource(resource, "PUT", params),
-      };
+      const data = await fetchResource<T>(
+        API_URL,
+        resource,
+        "PUT",
+        params
+      );
+      return { data };
     } catch (error) {
       console.error(`Error updating ${resource} with id ${params.id}:`, error);
       throw error;
     }
   },
 
-  create: async (resource, params) => {
+  create: async <T extends RaRecord<Identifier>>(resource: string, params: CreateParams<T>) => {
     try {
-      return {
-        data: await fetchResource(resource, "POST", params),
-      };
+      const data = await fetchResource<T>(
+        API_URL,
+        resource,
+        "POST",
+        params
+      );
+      return { data };
     } catch (error) {
       console.error(`Error creating new ${resource}:`, error);
       throw error;

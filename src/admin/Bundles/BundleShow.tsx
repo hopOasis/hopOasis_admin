@@ -6,20 +6,20 @@ import {
 	TextField,
 	ShowProps,
 } from "react-admin";
-import { CiderParams } from "../../types"; // Импортируем типы
+import { ProductBundleParams } from "../../types"; // Импортируем типы
 import '../StylesAdmin.css';
 
-export const CiderShow = (props: ShowProps) => (
-	<Show<CiderParams> {...props} className="list-common">
+export const BundleShow = (props: ShowProps) => (
+	<Show<ProductBundleParams> {...props} className="list-common">
 			<TabbedShowLayout className="list-common">
 					<TabbedShowLayout.Tab label="Information" className="list-common">
 							<TextField source="id" className="list-common" />
-							<TextField source="ciderName" label="Name" className="list-common" />
+							<TextField source="name" label="Name" className="list-common" />
 							<TextField source="description" label="Description" className="list-common" />
 					</TabbedShowLayout.Tab>
 
 					<TabbedShowLayout.Tab label="Images" className="list-common">
-							<ImageField source="ciderImageName" label="Images" className="list-common-image" />
+							<ImageField source="productImageName" label="Images" className="list-common-image" />
 					</TabbedShowLayout.Tab>
 
 					<TabbedShowLayout.Tab label="Ratings" className="list-common">

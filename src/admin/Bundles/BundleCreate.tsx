@@ -1,21 +1,22 @@
 import {
-	Edit,
+	Create,
 	ImageField,
 	ImageInput,
 	TabbedForm,
 	TextInput,
 	required,
 	NumberInput,
-	EditProps,
+	CreateProps,
 } from "react-admin";
+import { ProductBundleParams } from "../../types"; // Импортируем типы
 import '../StylesAdmin.css';
 
-export const CiderEdit = (props: EditProps) => (
-	<Edit {...props} className="list-common">
+export const BundleCreate = (props: CreateProps) => (
+	<Create<ProductBundleParams> {...props} className="list-common">
 			<TabbedForm className="list-common">
 					<TabbedForm.Tab label="Information" className="list-common">
 							<TextInput
-									source="ciderName"
+									source="name"
 									label="Name"
 									validate={[required()]}
 									className="list-common"
@@ -32,7 +33,7 @@ export const CiderEdit = (props: EditProps) => (
 
 					<TabbedForm.Tab label="Images" className="list-common">
 							<ImageInput
-									source="ciderImageName"
+									source="productImageName"
 									accept="image/*"
 									validate={[required()]}
 									className="list-common-image"
@@ -56,5 +57,5 @@ export const CiderEdit = (props: EditProps) => (
 							/>
 					</TabbedForm.Tab>
 			</TabbedForm>
-	</Edit>
+	</Create>
 );
