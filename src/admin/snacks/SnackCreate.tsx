@@ -5,67 +5,41 @@ import {
     TabbedForm,
     TextInput,
     required,
-    NumberInput,
     CreateProps,
 } from "react-admin";
-import { SnackParams } from "../../types"; // Импортируем типы
-import '../StylesAdmin.css';
+import { SnackParams } from "../../types";
 
 export const SnackCreate = (props: CreateProps) => (
     <Create<SnackParams> {...props} className="list-common">
         <TabbedForm className="list-common">
             <TabbedForm.Tab label="Information" className="list-common">
-                <TextInput
-                    source="snackName"
-                    label="Name"
-                    validate={[required()]}
-                    className="list-common"
-                />
+                <TextInput source="snackName" label="Name" validate={[required()]} className="list-common" />
+            </TabbedForm.Tab>
+            <TabbedForm.Tab label="Price and Weight" className="list-common">
+                <TextInput source="options[0]?.price" label="Price Option 1" validate={[required()]} className="list-common" />
+                <TextInput source="options[0]?.weight" label="Weight Option 1" validate={[required()]} className="list-common" />
+                <TextInput source="options[1]?.price" label="Price Option 2" validate={[required()]} className="list-common" />
+                <TextInput source="options[1]?.weight" label="Weight Option 2" validate={[required()]} className="list-common" />
+            </TabbedForm.Tab>
+            <TabbedForm.Tab label="Description" className="list-common">
                 <TextInput
                     source="description"
-                    label="Description"
+                    variant="outlined"
                     multiline
                     fullWidth
                     validate={[required()]}
                     className="list-common"
                 />
             </TabbedForm.Tab>
-
-            <TabbedForm.Tab label="Price and Weight" className="list-common">
-                <NumberInput
-                    source="priceLarge"
-                    label="Price (Large)"
-                    validate={[required()]}
-                    className="list-common"
-                />
-                <NumberInput
-                    source="priceSmall"
-                    label="Price (Small)"
-                    validate={[required()]}
-                    className="list-common"
-                />
-                <NumberInput
-                    source="weightLarge"
-                    label="Weight (Large)"
-                    validate={[required()]}
-                    className="list-common"
-                />
-                <NumberInput
-                    source="weightSmall"
-                    label="Weight (Small)"
-                    validate={[required()]}
-                    className="list-common"
-                />
-            </TabbedForm.Tab>
-
             <TabbedForm.Tab label="Images" className="list-common">
                 <ImageInput
-                    source="image"
+                    source="snackImageName"
                     accept="image/*"
                     validate={[required()]}
-                    className="list-common-image"
+                    multiple
+                    className="list-common"
                 >
-                    <ImageField source="src" title="title" />
+                    <ImageField source="src" title="name" className="list-common" />
                 </ImageInput>
             </TabbedForm.Tab>
         </TabbedForm>

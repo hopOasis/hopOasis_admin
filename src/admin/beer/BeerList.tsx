@@ -14,13 +14,38 @@ export const BeerList = (props: ListProps) => (
         <Datagrid rowClick="show" className="list-common">
             <TextField source="id" className="list-common" />
             <TextField source="beerName" label="Name" className="list-common" />
-            <NumberField source="priceLarge" className="list-common" />
-            <NumberField source="priceSmall" className="list-common" />
-            <NumberField source="volumeLarge" className="list-common" />
-            <NumberField source="volumeSmall" className="list-common" />
-            <TextField source="description" className="list-common" />
+            <NumberField source="averageRating" label="Average Rating" className="list-common" />
             <TextField source="beerColor" className="list-common" />
-            <ImageField source="imageName" label="Image" className="list-common-image" />
+            <TextField source="description" className="list-common" />
+            
+            {/* Задание размеров изображения через sx */}
+            <ImageField 
+                source="imageName[0]" 
+                label="Image" 
+                className="list-common-image" 
+               />
+            {/* Работа с массивом options */}
+            <TextField
+                source="options[0].volume"
+                label="Volume Large"
+                className="list-common"
+            />
+            <NumberField
+                source="options[0].price"
+                label="Price Large"
+                className="list-common"
+            />
+            {/* Проверка наличия второго элемента в options */}
+            <TextField
+                source="options[1]?.volume"
+                label="Volume Small"
+                className="list-common"
+            />
+            <NumberField
+                source="options[1]?.price"
+                label="Price Small"
+                className="list-common"
+            />
             <EditButton className="list-common-edit-button" />
         </Datagrid>
     </List>

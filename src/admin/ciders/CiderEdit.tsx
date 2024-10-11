@@ -1,57 +1,29 @@
 import {
 	Edit,
-	ImageField,
-	ImageInput,
+	NumberInput,
 	TabbedForm,
 	TextInput,
-	required,
-	NumberInput,
 	EditProps,
 } from "react-admin";
-import '../StylesAdmin.css';
 
 export const CiderEdit = (props: EditProps) => (
 	<Edit {...props} className="list-common">
 			<TabbedForm className="list-common">
 					<TabbedForm.Tab label="Information" className="list-common">
+							<TextInput source="ciderName" label="Name" variant="outlined" size="medium" className="list-common" />
+					</TabbedForm.Tab>
+					<TabbedForm.Tab label="Price and Volume" className="list-common">
+							<NumberInput source="options[0]?.price" label="Price Option 1" variant="outlined" size="medium" className="list-common" />
+							<NumberInput source="options[0]?.volume" label="Volume Option 1" variant="outlined" size="medium" className="list-common" />
+							<NumberInput source="options[1]?.price" label="Price Option 2" variant="outlined" size="medium" className="list-common" />
+							<NumberInput source="options[1]?.volume" label="Volume Option 2" variant="outlined" size="medium" className="list-common" />
+					</TabbedForm.Tab>
+					<TabbedForm.Tab label="Description" className="list-common">
 							<TextInput
-									source="ciderName"
-									label="Name"
-									validate={[required()]}
-									className="list-common"
-							/>
-							<TextInput
+									variant="outlined"
 									source="description"
-									label="Description"
 									multiline
 									fullWidth
-									validate={[required()]}
-									className="list-common"
-							/>
-					</TabbedForm.Tab>
-
-					<TabbedForm.Tab label="Images" className="list-common">
-							<ImageInput
-									source="ciderImageName"
-									accept="image/*"
-									validate={[required()]}
-									className="list-common-image"
-							>
-									<ImageField source="src" title="title" />
-							</ImageInput>
-					</TabbedForm.Tab>
-
-					<TabbedForm.Tab label="Ratings" className="list-common">
-							<NumberInput
-									source="averageRating"
-									label="Average Rating"
-									validate={[required()]}
-									className="list-common"
-							/>
-							<NumberInput
-									source="ratingCount"
-									label="Rating Count"
-									validate={[required()]}
 									className="list-common"
 							/>
 					</TabbedForm.Tab>

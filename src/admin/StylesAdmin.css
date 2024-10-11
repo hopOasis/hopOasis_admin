@@ -1,37 +1,50 @@
 body {
-  font-family: 'SUSE', sans-serif;
+    width: 100%;
+  height: 100%;
   margin: 0;
   padding: 0;
   overflow-x: hidden;
 }
-
-.RaLayout-contentWithSidebar, #main-content, a, .RaShow-main, .MuiCard-root, .RaShow-card {
-  background-color:#004445 !important; 
+/* header and sidebar */
+.css-lz9mh9-MuiToolbar-root{
+background-color:#f34a4a;
+}
+ #main-content, a, .css-1h6y07d-MuiList-root-RaMenu-root, .RaLayout-contentWithSidebar{
+  background-color:#615049;
   color: #ffffff !important;
-  font-weight: 500 !important;
+  padding-top: 15px;
 }
- .css-1aquho2-MuiTabs-indicator{
-  background-color:#6fb98f !important; 
-}
-.RaLayout-contentWithSidebar,.MuiSvgIcon-root a{
-padding-top: 20px;
-}
- .css-12zfx34-MuiStack-root-RaTab-root{
-color: #021c1e;
+.css-cg7rje-RaShow-root .RaShow-card{
+  background-color:#615049;
 }
 .MuiSvgIcon-root {  
   color: #ffffff ; 
 }
+/* спешл офферс  */
+.css-bhp9pd-MuiPaper-root-MuiCard-root, 
+.css-1a69w1n-MuiStack-root, .css-qmvuda-MuiToolbar-root-RaToolbar-root{
+  background-color:#615049 !important;
+}
+.css-11qvwfa-MuiFormLabel-root-MuiInputLabel-root,
+ #name-label, #name, .MuiFormControlLabel-label,
+ #specialOfferBeers-outlined-label,
+ #specialOfferCiders-outlined-label, 
+ #specialOfferSnacks-outlined-label, 
+ #specialOfferProductBundles-outlined-label {
+color:#ffffff;
+}
+
+
+
 .MuiAppBar-root{
 align-items:normal;
 justify-content: space-between;
 min-width: fit-content;
 color: #004445;
-
 }
 
-.list-common .RaDatagrid-root {
-  background-color: #6fb98f !important; 
+.css-14mup8f-RaDatagrid-root{
+  background-color: #262f34; 
   padding: 10px;
   box-sizing: border-box;
   width: 100%;
@@ -40,37 +53,41 @@ color: #004445;
   font-size: 24px;
 }
 
+
 .list-common .MuiTableRow-root,
 .list-common .MuiTableCell-root {
-  color: #ffffff !important; 
+  color: #ffffff; 
   text-align: center;
 }
 
 .list-common .MuiTab-root {
-  background-color: #6fb98f !important; 
-  color: #ffffff !important; 
+  background-color: #615049 !important; 
+  color: #ffffff !important;   
+  border: solid 0.5px  #262f34;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5) !important;
   border-radius: 10px;
+  margin: 5px;
 }
 
 .list-common .Mui-selected {
-  background-color: #021c1e !important; 
+  background-color: #f34a4a !important;
 }
 
 
 .list-common .RaTabbedShowLayout-content {
-  padding-left: 5% !important;
   border-radius: 15px;
-  background-color: #6fb98f !important; /* Светлый фон для контента */
-  color: #ffffff; /* Цвет текста - белый */
+  padding: 5px;
+  background-color: #262f34 !important; 
+  color: #ffffff !important;
 }
 
 .list-common .RaDatagrid-headerCell {
   font-weight: 500;
   color: #ffffff !important; 
-  background-color: #021c1e !important; 
-  padding: 15px;
+  background-color:#f34a4a !important;
+  /* padding: 10px; */
   text-align: center;
-  font-size: 1.1rem;
+  font-size: 1rem;
   letter-spacing: 1px;
 }
 
@@ -85,11 +102,11 @@ color: #004445;
 }
 
 .list-common .RaDatagrid-row:nth-child(even) {
-  background-color: #004445; 
+  background-color: #262f34; 
 }
 
 .list-common .RaDatagrid-row:nth-child(odd) {
-  background-color: #6fb98f; 
+  background-color: #615049; 
 }
 
 .list-common .RaDatagrid-row:hover {
@@ -134,10 +151,6 @@ color: #004445;
   }
 }
 
-.MuiAppBar-root {
-  background-color: #021c1e !important; /* Хедер - сине-черный */
-}
-
 .MuiTypography-h6 {
   color: #ffffff !important; /* Цвет текста - белый */
   font-weight: 500 !important;
@@ -148,7 +161,7 @@ color: #004445;
 .MuiButton-root {
   margin-right: 10px;
   padding: 7px !important;
-  background-color: #021c1e !important; /* Цвет кнопок - сине-черный */
+  background-color: #f34a4a !important; /* Цвет кнопок - сине-черный */
   color: #ffffff !important; /* Цвет текста кнопок - белый */
 }
 /* Стили для заголовка и кнопки в AppBar */
@@ -177,4 +190,14 @@ color: #004445;
   transform: scale(1.02) !important;
   text-shadow: 0 0 5px #ffffff !important;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2) !important;
+}
+
+.list-common-image, 
+.css-cb34tx-RaImageField-root, 
+img {
+  max-height: 40px; 
+  max-width: 50%;
+  object-fit: cover;
+  display: block;  
+  margin: 0 auto;   
 }

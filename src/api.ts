@@ -62,14 +62,14 @@ export const customProvider: DataProvider = {
           };
         }
         case "products-bundle": {
-          const productBundlesData = response.json.content.map((item: ProductBundleParams) => ({
+          const productsBundleData = response.json.content.map((item: ProductBundleParams) => ({
             ...item,
             productImageName: Array.isArray(item.productImageName)
               ? getImagesUrl(item.productImageName, API_URL, resource)
               : [],
           }));
           return {
-            data: productBundlesData,
+            data: productsBundleData,
             total: response.json.totalElements,
           };
         }
@@ -116,13 +116,13 @@ export const customProvider: DataProvider = {
           return { data: ciderData };
         }
         case "products-bundle": {
-          const productBundleData: ProductBundleParams = {
+          const productsBundleData: ProductBundleParams = {
             ...response.json,
             productImageName: Array.isArray(response.json.productImageName)
               ? getImagesUrl(response.json.productImageName, API_URL, resource)
               : [],
           };
-          return { data: productBundleData };
+          return { data: productsBundleData };
         }
         default:
           return baseDataProvider.getOne(resource, params);
