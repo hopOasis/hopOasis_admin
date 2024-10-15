@@ -4,29 +4,30 @@ import {
 	Show,
 	TabbedShowLayout,
 	TextField,
+	ShowProps,
 } from "react-admin";
+import { BeerParams } from "../../types";
 import '../StylesAdmin.css';
 
-export const BeerShow = () => (
-	<Show className="list-common">
-		<TabbedShowLayout className="list-common">
-			<TabbedShowLayout.Tab label={"information"} className="list-common">
-				<TextField source="id" />
-				<TextField source="beerName" label="Name" />
-				<TextField source="beerColor" />
-			</TabbedShowLayout.Tab>
-			<TabbedShowLayout.Tab label={"price and volume"} className="list-common">
-				<NumberField source="priceLarge" />
-				<NumberField source="priceSmall" />
-				<NumberField source="volumeLarge" />
-				<NumberField source="volumeSmall" />
-			</TabbedShowLayout.Tab>
-			<TabbedShowLayout.Tab label={"description"} className="list-common">
-				<TextField source="description" />
-			</TabbedShowLayout.Tab>
-			<TabbedShowLayout.Tab label={"images"} className="list-common">
-				<ImageField source="imageName" label="Image"/>
-			</TabbedShowLayout.Tab>
-		</TabbedShowLayout>
+export const BeerShow = (props: ShowProps) => (
+	<Show<BeerParams> {...props} className="list-common">
+			<TabbedShowLayout className="list-common">
+					<TabbedShowLayout.Tab label="Information" className="list-common">
+							<TextField source="id" className="list-common" />
+							<TextField source="beerName" label="Name" className="list-common" />
+					</TabbedShowLayout.Tab>
+					<TabbedShowLayout.Tab label="Price and Volume" className="list-common">
+							<NumberField source="options[0]?.price" label="Price Option 1" className="list-common" />
+							<NumberField source="options[0]?.volume" label="Volume Option 1" className="list-common" />
+							<NumberField source="options[1]?.price" label="Price Option 2" className="list-common" />
+							<NumberField source="options[1]?.volume" label="Volume Option 2" className="list-common" />
+					</TabbedShowLayout.Tab>
+					<TabbedShowLayout.Tab label="Description" className="list-common">
+							<TextField source="description" className="list-common" />
+					</TabbedShowLayout.Tab>
+					<TabbedShowLayout.Tab label="Images" className="list-common">
+							<ImageField source="imageName" label="Image" className="list-common-image" />
+					</TabbedShowLayout.Tab>
+			</TabbedShowLayout>
 	</Show>
 );

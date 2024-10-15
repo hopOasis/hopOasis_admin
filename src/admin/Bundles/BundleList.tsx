@@ -1,26 +1,25 @@
 import {
 	Datagrid,
 	EditButton,
-	ImageField,
 	List,
 	NumberField,
 	TextField,
 	ListProps
 } from "react-admin";
-import { CiderParams } from "../../types";
+import { ProductBundleParams } from "../../types";
 import '../StylesAdmin.css';
 
-export const CiderList = (props: ListProps) => (
-	<List<CiderParams> {...props} title="Ciders" className="list-common">
+export const BundleList = (props: ListProps) => (
+	<List<ProductBundleParams> {...props} title="Product Bundles" className="list-common">
 			<Datagrid rowClick="show" className="list-common">
 					<TextField source="id" className="list-common" />
-					<TextField source="ciderName" label="Name" className="list-common" />
+					<TextField source="name" label="Name" className="list-common" />
 					<NumberField source="averageRating" label="Average Rating" className="list-common" />
 					<NumberField source="ratingCount" label="Rating Count" className="list-common" />
-					{/* options */}
+					{/* Работа с массивом options */}
 					<NumberField
-							source="options[0]?.volume"
-							label="Volume Option 1"
+							source="options[0]?.quantity"
+							label="Quantity Option 1"
 							className="list-common"
 					/>
 					<NumberField
@@ -29,8 +28,8 @@ export const CiderList = (props: ListProps) => (
 							className="list-common"
 					/>
 					<NumberField
-							source="options[1]?.volume"
-							label="Volume Option 2"
+							source="options[1]?.quantity"
+							label="Quantity Option 2"
 							className="list-common"
 					/>
 					<NumberField
@@ -38,7 +37,6 @@ export const CiderList = (props: ListProps) => (
 							label="Price Option 2"
 							className="list-common"
 					/>
-							<ImageField source="ciderImageName[0]" label="Image" className="list-common-image" />
 					<EditButton className="list-common-edit-button" />
 			</Datagrid>
 	</List>

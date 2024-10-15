@@ -1,57 +1,99 @@
 body {
-  font-family: 'SUSE', sans-serif;
+    width: 100%;
+  height: 100%;
   margin: 0;
   padding: 0;
   overflow-x: hidden;
 }
+/* header and sidebar */
+.css-lz9mh9-MuiToolbar-root{
+background-color:#f34a4a;
+}
+ #main-content, a, .css-1h6y07d-MuiList-root-RaMenu-root, .RaLayout-contentWithSidebar{
+  background-color:#615049;
+  color: #ffffff !important;
+  padding-top: 15px;
+}
+.css-cg7rje-RaShow-root .RaShow-card{
+  background-color:#615049;
+}
+.MuiSvgIcon-root {  
+  color: #ffffff ; 
+}
+/* спешл офферс  */
+.css-bhp9pd-MuiPaper-root-MuiCard-root, 
+.css-1a69w1n-MuiStack-root, .css-qmvuda-MuiToolbar-root-RaToolbar-root{
+  background-color:#615049 !important;
+}
+.css-11qvwfa-MuiFormLabel-root-MuiInputLabel-root,
+ #name-label, #name, .MuiFormControlLabel-label,
+ #specialOfferBeers-outlined-label,
+ #specialOfferCiders-outlined-label, 
+ #specialOfferSnacks-outlined-label, 
+ #specialOfferProductBundles-outlined-label {
+color:#ffffff;
+}
 
-.list-common .RaDatagrid-root{
-  background-color: #77797a !important;
+
+
+.MuiAppBar-root{
+align-items:normal;
+justify-content: space-between;
+min-width: fit-content;
+color: #004445;
+}
+
+.css-14mup8f-RaDatagrid-root{
+  background-color: #262f34; 
   padding: 10px;
   box-sizing: border-box;
-  border-radius: 10px;
   width: 100%;
   max-width: 100%;
-  margin: 0px auto;
+  margin: auto;
+  font-size: 24px;
 }
+
+
 .list-common .MuiTableRow-root,
-.list-common .MuiTableCell-root{
- color:#ffffff !important;
+.list-common .MuiTableCell-root {
+  color: #ffffff; 
+  text-align: center;
 }
-/* show */
-.list-common .MuiTab-root{
-  background-color:#77797a !important;
-  color: #00ffff !important; 
-  border-radius:15px;
+
+.list-common .MuiTab-root {
+  background-color: #615049 !important; 
+  color: #ffffff !important;   
+  border: solid 0.5px  #262f34;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5) !important;
+  border-radius: 10px;
+  margin: 5px;
 }
+
 .list-common .Mui-selected {
-  background-color: #333333 !important; 
+  background-color: #f34a4a !important;
 }
-/* Стили для содержимого вкладок */
-.list-common .RaTabbedShowLayout-content{
-  padding-left: 5% !important; 
+
+
+.list-common .RaTabbedShowLayout-content {
   border-radius: 15px;
-  background-color: #77797a !important; 
-  color: #ffffff;
+  padding: 5px;
+  background-color: #262f34 !important; 
+  color: #ffffff !important;
 }
-
-/* show */
-
-
 
 .list-common .RaDatagrid-headerCell {
   font-weight: 500;
   color: #ffffff !important; 
-  background-color: #333333 !important;
-  padding: 15px;
-  text-align: center; 
-  font-size: 1.1rem;
+  background-color:#f34a4a !important;
+  /* padding: 10px; */
+  text-align: center;
+  font-size: 1rem;
   letter-spacing: 1px;
 }
 
 .list-common .RaTextField-root,
 .list-common .RaNumberField-root {
-  color: #ffffff !important; /* Принудительный белый цвет текста */
+  color: #ffffff !important; 
 }
 
 .list-common .RaDatagrid-row {
@@ -60,23 +102,26 @@ body {
 }
 
 .list-common .RaDatagrid-row:nth-child(even) {
-  background-color: #616466;
+  background-color: #262f34; 
+}
+
+.list-common .RaDatagrid-row:nth-child(odd) {
+  background-color: #615049; 
 }
 
 .list-common .RaDatagrid-row:hover {
-  background-color: #333333;
-  transform: scale(1.02);
-  text-shadow: 0 0 5px #00ffff;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  background-color: #021c1e !important; 
+  transform: scale(1.02) !important;
+  text-shadow: 0 0 5px #ffffff !important;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2) !important;
 }
 
 .list-common .RaDatagrid-cell {
   padding: 12px;
-  background-color: #333333;
   text-align: center;
   vertical-align: middle;
   letter-spacing: 2px;
-  color: #ffffff !important; /* Принудительный белый цвет текста */
+  color: #ffffff !important; /* Цвет текста - белый */
 }
 
 .list-common .RaDatagrid-image {
@@ -86,15 +131,8 @@ body {
   margin: 0 auto;
 }
 
-.list-common .RaTextField-root {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* Текст для описания списка */
 .table-container-p {
-  color: #00ffff;
+  color: #7a3b3b; /* Цвет заголовка - сине-красный */
   align-items: center;
   font-size: 20px;
   font-weight: 700;
@@ -102,7 +140,6 @@ body {
   letter-spacing: 3px;
 }
 
-/* Адаптивные стили */
 @media (max-width: 768px) {
   .list-common .RaDatagrid-root {
     padding: 10px;
@@ -114,26 +151,53 @@ body {
   }
 }
 
-/* ==================== Стили для админ-панели ==================== */
-
-.MuiAppBar-root {
-  background-color: #333333 !important;
-
-}
-
-/* Переопределение стиля заголовков списков */
 .MuiTypography-h6 {
-  color: #00ffff !important;
-  font-weight: 700 !important;
+  color: #ffffff !important; /* Цвет текста - белый */
+  font-weight: 500 !important;
   font-size: 2rem !important;
-  padding: 2px 5px;
   letter-spacing: 2px;
 }
 
-/* Переопределение стиля кнопок в Toolbar (верхние кнопки) */
 .MuiButton-root {
-  margin: 10px;
-  padding: 8px !important;
-  background-color: #333333 !important;
-  color: #ffffff !important;
+  margin-right: 10px;
+  padding: 7px !important;
+  background-color: #f34a4a !important; /* Цвет кнопок - сине-черный */
+  color: #ffffff !important; /* Цвет текста кнопок - белый */
+}
+/* Стили для заголовка и кнопки в AppBar */
+.toolbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.toolbar-title {
+  flex-grow: 1;
+  color: #ffffff; 
+  text-align: left;
+}
+
+.toolbar-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.toolbar-actions:hover {
+  background-color: #6fb98f !important;
+  transform: scale(1.02) !important;
+  text-shadow: 0 0 5px #ffffff !important;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2) !important;
+}
+
+.list-common-image, 
+.css-cb34tx-RaImageField-root, 
+img {
+  max-height: 40px; 
+  max-width: 50%;
+  object-fit: cover;
+  display: block;  
+  margin: 0 auto;   
 }

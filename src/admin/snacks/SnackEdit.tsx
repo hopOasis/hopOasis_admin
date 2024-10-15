@@ -1,35 +1,32 @@
-import { Edit, NumberInput, TabbedForm, TextInput } from "react-admin";
+import {
+    Edit,
+    NumberInput,
+    TabbedForm,
+    TextInput,
+    EditProps,
+} from "react-admin";
 
-export const SnackEdit = () => {
-	return (
-		<Edit>
-			<TabbedForm>
-				<TabbedForm.Tab label={"Information"}>
-					<TextInput
-						source="snackName"
-						label="Name"
-						variant="outlined"
-						size="medium"
-					/>
-				</TabbedForm.Tab>
-
-				<TabbedForm.Tab label={"Price and Weight"}>
-					<NumberInput source="priceLarge" label="Price (Large)" variant="outlined" size="medium" />
-					<NumberInput source="priceSmall" label="Price (Small)" variant="outlined" size="medium" />
-					<NumberInput source="weightLarge" label="Weight (Large)" variant="outlined" size="medium" />
-					<NumberInput source="weightSmall" label="Weight (Small)" variant="outlined" size="medium" />
-				</TabbedForm.Tab>
-
-				<TabbedForm.Tab label={"Description"}>
-					<TextInput
-						variant="outlined"
-						source="description"
-						label="Description"
-						multiline
-						fullWidth
-					/>
-				</TabbedForm.Tab>
-			</TabbedForm>
-		</Edit>
-	);
-};
+export const SnackEdit = (props: EditProps) => (
+    <Edit {...props} className="list-common">
+        <TabbedForm className="list-common">
+            <TabbedForm.Tab label="Information" className="list-common">
+                <TextInput source="snackName" label="Name" variant="outlined" size="medium" className="list-common" />
+            </TabbedForm.Tab>
+            <TabbedForm.Tab label="Price and Weight" className="list-common">
+                <NumberInput source="options[0]?.price" label="Price Option 1" variant="outlined" size="medium" className="list-common" />
+                <NumberInput source="options[0]?.weight" label="Weight Option 1" variant="outlined" size="medium" className="list-common" />
+                <NumberInput source="options[1]?.price" label="Price Option 2" variant="outlined" size="medium" className="list-common" />
+                <NumberInput source="options[1]?.weight" label="Weight Option 2" variant="outlined" size="medium" className="list-common" />
+            </TabbedForm.Tab>
+            <TabbedForm.Tab label="Description" className="list-common">
+                <TextInput
+                    variant="outlined"
+                    source="description"
+                    multiline
+                    fullWidth
+                    className="list-common"
+                />
+            </TabbedForm.Tab>
+        </TabbedForm>
+    </Edit>
+);

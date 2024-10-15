@@ -1,204 +1,173 @@
-
 import simpleRestDataProvider from "ra-data-simple-rest";
-import { CreateParams, DataProvider, fetchUtils, UpdateParams } from "react-admin";
-import { getImagesUrl } from "./utils";
-import { OfferParams, SnackParams, BeerParams, CiderParams } from "./types";
+import { DataProvider, fetchUtils } from "react-admin";
+import type { RaRecord, Identifier, CreateParams, UpdateParams } from "react-admin";
+import type { SnackParams, BeerParams, CiderParams, ProductBundleParams } from "./types";
+import { getImagesUrl, fetchResource } from "./utils";
 
-const API_URL = "https://gfkg3ijokauacf7dkjkvjqqeai0xefka.lambda-url.eu-central-1.on.aws";
-
+const API_URL = "https://giou6fh6yg2ogdsh7uzcaobhte0wtwha.lambda-url.eu-central-1.on.aws";
 const baseDataProvider = simpleRestDataProvider(API_URL);
 
-const processPaginatedResponse = <T>(response: { json: { content: T[]; totalElements: number } }) => {
-    return {
-        data: response.json.content,
-        total: response.json.totalElements,
-    };
-};
-
-const createOfferFormData = (params: CreateParams<OfferParams>) => {
-    const formData = new FormData();
-    if (params.data.name) formData.append("name", params.data.name);
-    if (params.data.active !== undefined) formData.append("active", String(params.data.active));
-    formData.append("specialOfferBeers", JSON.stringify(params.data.specialOfferBeers || []));
-    formData.append("specialOfferCiders", JSON.stringify(params.data.specialOfferCiders || []));
-    formData.append("specialOfferSnacks", JSON.stringify(params.data.specialOfferSnacks || []));
-    formData.append("specialOfferProductBundles", JSON.stringify(params.data.specialOfferProductBundles || []));
-    return formData;
-};
-
-const createSnackFormData = (params: CreateParams<SnackParams>) => {
-    const formData = new FormData();
-    if (params.data.snackName) formData.append("snackName", params.data.snackName);
-    if (params.data.description) formData.append("description", params.data.description);
-    if (params.data.priceLarge !== undefined) formData.append("priceLarge", String(params.data.priceLarge));
-    if (params.data.priceSmall !== undefined) formData.append("priceSmall", String(params.data.priceSmall));
-    if (params.data.weightLarge !== undefined) formData.append("weightLarge", String(params.data.weightLarge));
-    if (params.data.weightSmall !== undefined) formData.append("weightSmall", String(params.data.weightSmall));
-    if (params.data.averageRating !== undefined) formData.append("averageRating", String(params.data.averageRating));
-    if (params.data.ratingCount !== undefined) formData.append("ratingCount", String(params.data.ratingCount));
-    if (params.data.snackImageName && Array.isArray(params.data.snackImageName)) {
-        params.data.snackImageName.forEach((imageName) => {
-            formData.append("snackImageName", imageName);
-        });
-    }
-    return formData;
-};
-
 export const customProvider: DataProvider = {
-    ...baseDataProvider,
+  ...baseDataProvider,
 
-    getList: async (resource, params) => {
-        try {
-            let url = `${API_URL}/${resource}`;
-            const { page, perPage } = params.pagination;
-            const { field, order } = params.sort;
-            url += `?_page=${page}&_limit=${perPage}&_sort=${field}&_order=${order}`;
-            const response = await fetchUtils.fetchJson(url);
-            if (resource === "special-offers") {
-                return processPaginatedResponse<OfferParams>(response);
-            }
-            if (resource === "snacks") {
-                const data = response.json.content.map((item: SnackParams) => ({
-                    ...item,
-                    snackImageName: Array.isArray(item.snackImageName)
-                        ? getImagesUrl(item.snackImageName, API_URL, resource).join(" ")
-                        : "",
-                }));
-                return {
-                    data,
-                    total: response.json.totalElements,
-                };
-            }
-            if (resource === "beers" || resource === "ciders") {
-                return processPaginatedResponse<BeerParams | CiderParams>(response);
-            }
-            return baseDataProvider.getList(resource, params);
-        } catch (error) {
-            console.error(`Error fetching list for resource ${resource}:`, error);
-            throw error;
+  getList: async (resource, params) => {
+    try {
+      let url = `${API_URL}/${resource}`;
+      const { page, perPage } = params.pagination;
+      const { field, order } = params.sort;
+      url += `?_page=${page}&_limit=${perPage}&_sort=${field}&_order=${order}`;
+      const response = await fetchUtils.fetchJson(url);
+
+      switch (resource) {
+        case "special-offers": {
+          return {
+            data: response.json,
+            total: response.json.length,
+          };
         }
-    },
-
-    getOne: async (resource, params) => {
-        try {
-            const url = `${API_URL}/${resource}/${params.id}`;
-            const response = await fetchUtils.fetchJson(url);
-            if (resource === "special-offers") {
-                return {
-                    data: response.json,
-                };
-            }
-            if (resource === "snacks") {
-                const data: SnackParams = {
-                    ...response.json,
-                    snackImageName: Array.isArray(response.json.snackImageName)
-                        ? getImagesUrl(response.json.snackImageName, API_URL, resource).join(" ")
-                        : [],
-                };
-                return { data };
-            }
-            return baseDataProvider.getOne(resource, params);
-        } catch (error) {
-            console.error(`Error fetching one item for resource ${resource}:`, error);
-            throw error;
+        case "snacks": {
+          const snacksData = response.json.content.map((item: SnackParams) => ({
+            ...item,
+            snackImageName: Array.isArray(item.snackImageName)
+              ? getImagesUrl(item.snackImageName, API_URL, resource)
+              : [],
+          }));
+          return {
+            data: snacksData,
+            total: response.json.totalElements,
+          };
         }
-    },
-
-    update: async (resource, params) => {
-        try {
-            if (resource === "special-offers") {
-                const formData = createOfferFormData(params as UpdateParams<OfferParams>);
-                const response = await fetch(`${API_URL}/special-offers/${params.id}`, {
-                    method: "PUT",
-                    body: formData,
-                });
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error(`Failed to update ${resource}. Response:`, errorText);
-                    throw new Error("Failed to update");
-                }
-                return {
-                    data: await response.json(),
-                };
-            }
-            if (resource === "snacks") {
-                const formData = createSnackFormData(params as UpdateParams<SnackParams>);
-                const response = await fetch(`${API_URL}/snacks/${params.id}`, {
-                    method: "PUT",
-                    body: formData,
-                });
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error(`Failed to update ${resource}. Response:`, errorText);
-                    throw new Error("Failed to update");
-                }
-                return {
-                    data: await response.json(),
-                };
-            }
-            return baseDataProvider.update(resource, params);
-        } catch (error) {
-            console.error(`Error updating ${resource} with id ${params.id}:`, error);
-            throw error;
+        case "beers": {
+          const beersData = response.json.content.map((item: BeerParams) => ({
+            ...item,
+            imageName: Array.isArray(item.imageName)
+              ? getImagesUrl(item.imageName, API_URL, resource)
+              : [],
+          }));
+          return {
+            data: beersData,
+            total: response.json.totalElements,
+          };
         }
-    },
-
-    create: async (resource, params) => {
-        try {
-            if (resource === "special-offers") {
-                const formData = createOfferFormData(params as CreateParams<OfferParams>);
-                const response = await fetch(`${API_URL}/special-offers`, {
-                    method: "POST",
-                    body: formData,
-                });
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error(`Failed to create ${resource}. Response:`, errorText);
-                    throw new Error("Failed to create");
-                }
-                return {
-                    data: await response.json(),
-                };
-            }
-            if (resource === "snacks") {
-                const formData = createSnackFormData(params as CreateParams<SnackParams>);
-                const response = await fetch(`${API_URL}/snacks`, {
-                    method: "POST",
-                    body: formData,
-                });
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error(`Failed to create ${resource}. Response:`, errorText);
-                    throw new Error("Failed to create");
-                }
-                return {
-                    data: await response.json(),
-                };
-            }
-            return baseDataProvider.create(resource, params);
-        } catch (error) {
-            console.error(`Error creating new ${resource}:`, error);
-            throw error;
+        case "ciders": {
+          const cidersData = response.json.content.map((item: CiderParams) => ({
+            ...item,
+            ciderImageName: Array.isArray(item.ciderImageName)
+              ? getImagesUrl(item.ciderImageName, API_URL, resource)
+              : [],
+          }));
+          return {
+            data: cidersData,
+            total: response.json.totalElements,
+          };
         }
-    },
+        case "products-bundle": {
+          const productsBundleData = response.json.content.map((item: ProductBundleParams) => ({
+            ...item,
+            productImageName: Array.isArray(item.productImageName)
+              ? getImagesUrl(item.productImageName, API_URL, resource)
+              : [],
+          }));
+          return {
+            data: productsBundleData,
+            total: response.json.totalElements,
+          };
+        }
+        default:
+          return baseDataProvider.getList(resource, params);
+      }
+    } catch (error) {
+      console.error(`Error fetching list for resource ${resource}:`, error);
+      throw error;
+    }
+  },
 
-    delete: async (resource, params) => {
-        return baseDataProvider.delete(resource, params);
-    },
+  getOne: async (resource, params) => {
+    try {
+      const response = await fetchUtils.fetchJson(`${API_URL}/${resource}/${params.id}`);
+      switch (resource) {
+        case "special-offers":
+          return { data: response.json };
+        case "snacks": {
+          const snackData: SnackParams = {
+            ...response.json,
+            snackImageName: Array.isArray(response.json.snackImageName)
+              ? getImagesUrl(response.json.snackImageName, API_URL, resource)
+              : [],
+          };
+          return { data: snackData };
+        }
+        case "beers": {
+          const beerData: BeerParams = {
+            ...response.json,
+            imageName: Array.isArray(response.json.imageName)
+              ? getImagesUrl(response.json.imageName, API_URL, resource)
+              : [],
+          };
+          return { data: beerData };
+        }
+        case "ciders": {
+          const ciderData: CiderParams = {
+            ...response.json,
+            ciderImageName: Array.isArray(response.json.ciderImageName)
+              ? getImagesUrl(response.json.ciderImageName, API_URL, resource)
+              : [],
+          };
+          return { data: ciderData };
+        }
+        case "products-bundle": {
+          const productsBundleData: ProductBundleParams = {
+            ...response.json,
+            productImageName: Array.isArray(response.json.productImageName)
+              ? getImagesUrl(response.json.productImageName, API_URL, resource)
+              : [],
+          };
+          return { data: productsBundleData };
+        }
+        default:
+          return baseDataProvider.getOne(resource, params);
+      }
+    } catch (error) {
+      console.error(`Error fetching one item for resource ${resource}:`, error);
+      throw error;
+    }
+  },
 
-    getMany: async (resource, params) => {
-        return baseDataProvider.getMany(resource, params);
-    },
+  update: async <T extends RaRecord<Identifier>>(resource: string, params: UpdateParams<T>) => {
+    try {
+      const data = await fetchResource<T>(
+        API_URL,
+        resource,
+        "PUT",
+        params
+      );
+      return { data };
+    } catch (error) {
+      console.error(`Error updating ${resource} with id ${params.id}:`, error);
+      throw error;
+    }
+  },
 
-    getManyReference: async (resource, params) => {
-        return baseDataProvider.getManyReference(resource, params);
-    },
+  create: async <T extends RaRecord<Identifier>>(resource: string, params: CreateParams<T>) => {
+    try {
+      const data = await fetchResource<T>(
+        API_URL,
+        resource,
+        "POST",
+        params
+      );
+      return { data };
+    } catch (error) {
+      console.error(`Error creating new ${resource}:`, error);
+      throw error;
+    }
+  },
 
-    updateMany: async (resource, params) => {
-        return baseDataProvider.updateMany(resource, params);
-    },
+  delete: async (resource, params) => {
+    return baseDataProvider.delete(resource, params);
+  },
 
-    deleteMany: async (resource, params) => {
-        return baseDataProvider.deleteMany(resource, params);
-    },
+  deleteMany: async (resource, params) => {
+    return baseDataProvider.deleteMany(resource, params);
+  },
 };
