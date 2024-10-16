@@ -188,7 +188,7 @@ color: #004445;
 .toolbar-actions:hover {
   background-color: #6fb98f !important;
   transform: scale(1.02) !important;
-  text-shadow: 0 0 5px #ffffff !important;
+  text-shadow: 0 0 5px #faf2f2 !important;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2) !important;
 }
 
