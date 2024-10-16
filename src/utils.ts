@@ -13,8 +13,14 @@ export const getImagesUrl = (
     console.error("Expected an array of image names, but received:", imagesName);
     return [];
   }
-  return imagesName.map((image) => `${url}/${resource}/images/${image}`);
+  return imagesName.map((image) => {
+    if (image.startsWith("http://") || image.startsWith("https://")) {
+      return image; 
+    }
+    return `${url}/${resource}/images/${image}`;
+  });
 };
+
 
 /**
  * FormData для офферсов
