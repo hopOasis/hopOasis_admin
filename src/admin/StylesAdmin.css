@@ -127,9 +127,12 @@ a,
 .list-common .Mui-selected {
   background-color: #f34a4a !important;
 }
+.RaTabbedShowLayout-content{
+min-height: 50vh;
+}
 
 /* Контент в Show Layout */
-.list-common .RaTabbedShowLayout-content, .css-4e85xd-RaTabbedShowLayout-root, .RaTabbedShowLayout-content {
+.list-common .RaTabbedShowLayout-content {
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -164,8 +167,7 @@ a,
 .RaImageField-image {
   border: 1px solid #ccc;
   border-radius: 4px;
-  padding: 5px;
-  width: 100%;
+  max-width: 80px;
   height: auto;
 }
 
@@ -235,12 +237,13 @@ a,
 }
 
 /* Универсальные стили для изображений */
-.list-common-image, 
+/* .list-common-image, 
 .css-cb34tx-RaImageField-root, 
 img {
-  max-height: 40px;
-  max-width: 50%;
   object-fit: cover;
   display: block;
-  margin: 0 auto;
-}
+  justify-content: flex-start;
+  height: auto;
+  
+} */
+
