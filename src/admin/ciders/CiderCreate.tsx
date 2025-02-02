@@ -7,6 +7,7 @@ import {
 	required,
 	CreateProps,
 } from "react-admin";
+import OptionsField from "../OptionsField/OptionFields";
 import { CiderParams } from "../../types";
 
 export const CiderCreate = (props: CreateProps) => (
@@ -16,11 +17,16 @@ export const CiderCreate = (props: CreateProps) => (
 							<TextInput source="ciderName" label="Name" validate={[required()]} className="list-common" />
 					</TabbedForm.Tab>
 					<TabbedForm.Tab label="Price and Volume" className="list-common">
-							<TextInput source="options[0]?.price" label="Price Option 1" validate={[required()]} className="list-common" />
-							<TextInput source="options[0]?.volume" label="Volume Option 1" validate={[required()]} className="list-common" />
-							<TextInput source="options[1]?.price" label="Price Option 2" validate={[required()]} className="list-common" />
-							<TextInput source="options[1]?.volume" label="Volume Option 2" validate={[required()]} className="list-common" />
-					</TabbedForm.Tab>
+						<OptionsField
+								optionsSource="options"
+								fields={[
+									{ key: 'id', label: 'ID' },
+										{ key: 'price', label: 'Price' },
+										{ key: 'volume', label: 'Volume' },
+										{ key: 'quantity', label: 'Quantity' },
+								]}
+						/>
+				</TabbedForm.Tab>
 					<TabbedForm.Tab label="Description" className="list-common">
 							<TextInput
 									source="description"
@@ -44,4 +50,4 @@ export const CiderCreate = (props: CreateProps) => (
 					</TabbedForm.Tab>
 			</TabbedForm>
 	</Create>
-);
+); export default CiderCreate;

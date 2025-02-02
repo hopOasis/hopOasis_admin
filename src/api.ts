@@ -1,182 +1,138 @@
-import simpleRestDataProvider from "ra-data-simple-rest";
-import { DataProvider, fetchUtils } from "react-admin";
-import type { RaRecord, Identifier, CreateParams, UpdateParams } from "react-admin";
-import type { SnackParams, BeerParams, CiderParams, ProductBundleParams } from "./types";
-import { getImagesUrl, fetchResource } from "./utils";
+import { DataProvider } from "react-admin";
+import { fetchUtils } from "react-admin";
+import { getImagesUrl} from "./utils";
+import simpleRestDataProvider from 'ra-data-simple-rest';
+import { BeerParams, CiderParams, ProductBundleParams, SnackParams } from "./types";
 
-const API_URL = "https://gfkg3ijokauacf7dkjkvjqqeai0xefka.lambda-url.eu-central-1.on.aws";
+const API_URL = "https://hopoasis.onrender.com";
+
 const baseDataProvider = simpleRestDataProvider(API_URL);
 
+export type ResourceData = BeerParams | CiderParams | SnackParams | ProductBundleParams;
+
 export const customProvider: DataProvider = {
-  ...baseDataProvider,
+    ...baseDataProvider,
 
-  getList: async (resource, params) => {
-    try {
-      let url = `${API_URL}/${resource}`;
-      const { page, perPage } = params.pagination;
-      const { field, order } = params.sort;
-      url += `?_page=${page}&_limit=${perPage}&_sort=${field}&_order=${order}`;
-      const response = await fetchUtils.fetchJson(url);
+    getList: async (resource, params) => {
+        const { page, perPage } = params.pagination;
+        const { field, order } = params.sort;
 
-      switch (resource) {
-        case "special-offers": {
-          return {
-            data: response.json,
-            total: response.json.length,
-          };
-        }
-        case "snacks": {
-          const snacksData = response.json.content.map((item: SnackParams) => ({
-            ...item,
-            snackImageName: Array.isArray(item.snackImageName)
-              ? getImagesUrl(item.snackImageName, API_URL, resource)
-              : [],
-          }));
-          return {
-            data: snacksData,
-            total: response.json.totalElements,
-          };
-        }
-        case "beers": {
-          const beersData = response.json.content.map((item: BeerParams) => ({
-            ...item,
-            imageName: Array.isArray(item.imageName)
-              ? getImagesUrl(item.imageName, API_URL, resource)
-              : [],
-          }));
-          return {
-            data: beersData,
-            total: response.json.totalElements,
-          };
-        }
-        case "ciders": {
-          const cidersData = response.json.content.map((item: CiderParams) => ({
-            ...item,
-            ciderImageName: Array.isArray(item.ciderImageName)
-              ? getImagesUrl(item.ciderImageName, API_URL, resource)
-              : [],
-          }));
-          return {
-            data: cidersData,
-            total: response.json.totalElements,
-          };
-        }
-        case "products-bundle": {
-          const productsBundleData = response.json.content.map((item: ProductBundleParams) => ({
-            ...item,
-            productImageName: Array.isArray(item.productImageName)
-              ? getImagesUrl(item.productImageName, API_URL, resource)
-              : [],
-          }));
-          return {
-            data: productsBundleData,
-            total: response.json.totalElements,
-          };
-        }
-        default:
-          return baseDataProvider.getList(resource, params);
-      }
-    } catch (error) {
-      console.error(`Error fetching list for resource ${resource}:`, error);
-      throw error;
-    }
-  },
+        const url = `${API_URL}/${resource}?_page=${page}&_limit=${perPage}&_sort=${field}&_order=${order}`;
+        try {
+            const response = await fetchUtils.fetchJson(url);
+            const processedData =
+                ["snacks", "beers", "ciders", "products-bundle"].includes(resource) &&
+                Array.isArray(response.json.content)
+                    ? response.json.content.map((item: ResourceData) => ({
+                        ...item,
+                        imageName: getImagesUrl(item.imageName || [], API_URL, resource),
+                    }))
+                    : response.json;
 
-  getOne: async (resource, params) => {
-    try {
-      const response = await fetchUtils.fetchJson(`${API_URL}/${resource}/${params.id}`);
-      switch (resource) {
-        case "special-offers":
-          return { data: response.json };
-        case "snacks": {
-          const snackData: SnackParams = {
-            ...response.json,
-            snackImageName: Array.isArray(response.json.snackImageName)
-              ? getImagesUrl(response.json.snackImageName, API_URL, resource)
-              : [],
-          };
-          return { data: snackData };
+            return {
+                data: processedData,
+                total: response.json.totalElements || processedData.length,
+            };
+        } catch (error) {
+            console.error("Error fetching list:", error);
+            throw new Error("Error fetching list");
         }
-        case "beers": {
-          const beerData: BeerParams = {
-            ...response.json,
-            imageName: Array.isArray(response.json.imageName)
-              ? getImagesUrl(response.json.imageName, API_URL, resource)
-              : [],
-          };
-          return { data: beerData };
-        }
-        case "ciders": {
-          const ciderData: CiderParams = {
-            ...response.json,
-            ciderImageName: Array.isArray(response.json.ciderImageName)
-              ? getImagesUrl(response.json.ciderImageName, API_URL, resource)
-              : [],
-          };
-          return { data: ciderData };
-        }
-        case "products-bundle": {
-          const productsBundleData: ProductBundleParams = {
-            ...response.json,
-            productImageName: Array.isArray(response.json.productImageName)
-              ? getImagesUrl(response.json.productImageName, API_URL, resource)
-              : [],
-          };
-          return { data: productsBundleData };
-        }
-        default:
-          return baseDataProvider.getOne(resource, params);
-      }
-    } catch (error) {
-      console.error(`Error fetching one item for resource ${resource}:`, error);
-      throw error;
-    }
-  },
+    },
 
-  update: async <T extends RaRecord<Identifier>>(resource: string, params: UpdateParams<T>) => {
-    try {
-      const data = await fetchResource<T>(
-        API_URL,
-        resource,
-        "PUT",
-        params
-      );
-      return { data };
-    } catch (error) {
-      console.error(`Error updating ${resource} with id ${params.id}:`, error);
-      throw error;
-    }
-  },
-
-  create: async <T extends RaRecord<Identifier>>(resource: string, params: CreateParams<T>) => {
-    try {
-      const data = await fetchResource<T>(
-        API_URL,
-        resource,
-        "POST",
-        params
-      );
-      return { data };
-    } catch (error) {
-      console.error(`Error creating ${resource}:`, error);
-      throw error;
-    }
-  },
-
-  delete: async (resource, params) => {
-    try {
-      const response = await fetchUtils.fetchJson(
-        `${API_URL}/${resource}/${params.id}`,
-        {
-          method: "DELETE",
+    getOne: async (resource, params) => {
+        const url = `${API_URL}/${resource}/${params.id}`;
+        try {
+            const response = await fetchUtils.fetchJson(url);
+            return { data: response.json };
+        } catch (error) {
+            console.error("Error fetching one:", error);
+            throw new Error("Error fetching one");
         }
-      );
-      return { data: response.json };
-    } catch (error) {
-      console.error(`Error deleting ${resource} with id ${params.id}:`, error);
-      throw error;
-    }
-  },
+    },
+
+ 
+    create: async (resource, params) => {
+        console.log(`Creating resource: ${resource}`, params.data);
+
+        // Видаляємо id, щоб сервер сам його створив
+        const dataWithoutId = { ...params.data };
+        delete dataWithoutId.id;
+
+        const authToken = localStorage.getItem("authToken");
+        if (!authToken) {
+            throw new Error("Authentication token is missing.");
+        }
+
+        try {
+            const response = await fetchUtils.fetchJson(`${API_URL}/${resource}`, {
+                method: "POST",
+                body: JSON.stringify(dataWithoutId),
+                headers: new Headers({
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${authToken}`,
+                }),
+            });
+            console.log("Server full response:", response);
+            console.log("Created successfully:", response.json);
+            return { data: response.json };
+        } catch (error) {
+            console.error("Error creating resource:", error);
+            throw new Error("Failed to create resource.");
+        }
+    },
+
+    update: async (resource, params) => {
+        const { id, data } = params;
+        const url = `${API_URL}/${resource}/${id}`;
+        const authToken = localStorage.getItem("authToken");
+
+        if (!authToken) {
+            throw new Error("Authentication token is missing.");
+        }
+
+        const headers = new Headers({
+            'Authorization': `Bearer ${authToken}`,
+            'Content-Type': 'application/json',
+        });
+
+        try {
+            const response = await fetchUtils.fetchJson(url, {
+                method: "PUT",
+                body: JSON.stringify(data),
+                headers,
+            });
+
+            return { data: response.json };
+        } catch (error) {
+            console.error("Error updating resource:", error);
+            throw new Error(`Failed to update resource: ${error}`);
+        }
+    },
+
+    delete: async (resource, params) => {
+        const { id } = params;
+        const url = `${API_URL}/${resource}/${id}`;
+        const authToken = localStorage.getItem("authToken");
+
+        if (!authToken) {
+            throw new Error("Authentication token is missing.");
+        }
+
+        try {
+            const response = await fetchUtils.fetchJson(url, {
+                method: "DELETE",
+                headers: {
+                    'Authorization': `Bearer ${authToken}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            return { data: response.json || { id } };
+        } catch (error) {
+            console.error("Error deleting resource:", error);
+            throw new Error(`Failed to delete resource: ${error}`);
+        }
+    },
 };
 
 export default customProvider;
